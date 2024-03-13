@@ -31,6 +31,15 @@ export interface GoogleInitOptions {
    * 'select_account' Prompt the user to select an account.
    */
   prompt? : '' | 'none' | 'consent' | 'select_account';
+
+
+  /**
+    * Object with options that will be passed in Google Idenitity JS API on initialization
+    *
+    * List of valid options can be found in the Google's documentation of IdConfiguration type:
+    *  https://developers.google.com/identity/gsi/web/reference/js-reference#IdConfiguration
+    */
+  id_configuration?: object
 }
 
 const defaultInitOptions: GoogleInitOptions = {
@@ -77,7 +86,8 @@ export class GoogleLoginProvider extends BaseLoginProvider {
                 this._socialUser.next(socialUser);
               },
               prompt_parent_id: this.initOptions?.prompt_parent_id,
-              itp_support: this.initOptions.oneTapEnabled
+              itp_support: this.initOptions.oneTapEnabled,
+              ...(this.initOptions?.id_configuration || {})
             });
 
             if (this.initOptions.oneTapEnabled) {
